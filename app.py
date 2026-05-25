@@ -1,4 +1,4 @@
-```python
+
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -317,4 +317,4 @@ elif page == "About":
     """)
 
     st.info("Machine Learning Project using Python and Streamlit")
-```
+
