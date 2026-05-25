@@ -1,8 +1,9 @@
+```python
 import streamlit as st
 import pandas as pd
 import numpy as np
 import plotly.express as px
-import joblib
+
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
@@ -15,14 +16,16 @@ st.set_page_config(
     layout="wide"
 )
 
-# ---------------- LOAD DATA ----------------
+# ---------------- LOAD DATASET ----------------
 
 df = pd.read_csv("Data - Parkinsons.csv")
 
-# ---------------- TRAIN MODEL ----------------
+# ---------------- PREPARE DATA ----------------
 
-X = df.drop(columns=['name', 'status'], axis=1)
+X = df.drop(columns=['name', 'status'])
 Y = df['status']
+
+# ---------------- TRAIN TEST SPLIT ----------------
 
 X_train, X_test, Y_train, Y_test = train_test_split(
     X,
@@ -31,10 +34,14 @@ X_train, X_test, Y_train, Y_test = train_test_split(
     random_state=2
 )
 
+# ---------------- SCALING ----------------
+
 scaler = StandardScaler()
 
 X_train = scaler.fit_transform(X_train)
 X_test = scaler.transform(X_test)
+
+# ---------------- MODEL ----------------
 
 model = LogisticRegression()
 
@@ -45,7 +52,7 @@ model.fit(X_train, Y_train)
 st.sidebar.title("Navigation")
 
 page = st.sidebar.radio(
-    "Go To",
+    "Select Page",
     [
         "Home",
         "Disease Prediction",
@@ -54,47 +61,45 @@ page = st.sidebar.radio(
     ]
 )
 
-# ---------------- HOME PAGE ----------------
+# =========================================================
+# HOME PAGE
+# =========================================================
 
 if page == "Home":
 
     st.title("🩺 Parkinson Disease Prediction System")
 
-    st.image(
-        "https://cdn-icons-png.flaticon.com/512/2966/2966486.png",
-        width=200
-    )
-
     st.markdown("""
-    # Welcome
+    ## Welcome
 
     This is a Machine Learning project developed by **Dharshana**
     using **Python** and **Streamlit**.
 
-    ## Features
+    ### Features
 
     - Parkinson Disease Prediction
     - Statistical Analysis
-    - Interactive Charts
-    - Data Visualization
-    - Machine Learning Model
+    - Interactive Visualizations
+    - Machine Learning Prediction
+    - Medical Report Input
 
-    ## Project Objective
+    ### Objective
 
     This system predicts whether a person may have Parkinson Disease
     using medical voice measurement parameters.
-
     """)
 
     st.success("Use the sidebar to navigate through the application.")
 
-# ---------------- PREDICTION PAGE ----------------
+# =========================================================
+# PREDICTION PAGE
+# =========================================================
 
 elif page == "Disease Prediction":
 
     st.title("🧠 Parkinson Disease Prediction")
 
-    st.write("Enter the medical values below:")
+    st.write("Enter the medical parameters below:")
 
     feature_names = [
         'MDVP:Fo(Hz)',
@@ -151,7 +156,7 @@ elif page == "Disease Prediction":
             st.error("⚠️ The person may have Parkinson Disease.")
 
             st.warning(
-                "Please consult a neurologist or medical professional for proper diagnosis."
+                "Please consult a neurologist or doctor for proper diagnosis."
             )
 
         else:
@@ -160,7 +165,9 @@ elif page == "Disease Prediction":
                 "✅ The person does not show Parkinson Disease symptoms."
             )
 
-# ---------------- STATISTICS PAGE ----------------
+# =========================================================
+# STATISTICS PAGE
+# =========================================================
 
 elif page == "Statistics":
 
@@ -178,14 +185,14 @@ elif page == "Statistics":
 
     st.write(df.describe())
 
-    # Select Column
+    # ---------------- COLUMN SELECTION ----------------
 
     column = st.selectbox(
         "Select Column",
         df.columns[1:]
     )
 
-    # Basic Statistics
+    # ---------------- BASIC STATISTICS ----------------
 
     st.subheader("Basic Statistical Functions")
 
@@ -207,7 +214,7 @@ elif page == "Statistics":
         if st.button("Minimum"):
             st.write("Minimum:", df[column].min())
 
-    # Visualization
+    # ---------------- VISUALIZATIONS ----------------
 
     st.subheader("Data Visualization")
 
@@ -221,6 +228,8 @@ elif page == "Statistics":
         ]
     )
 
+    # BAR CHART
+
     if chart == "Bar Chart":
 
         fig = px.bar(
@@ -231,6 +240,8 @@ elif page == "Statistics":
         )
 
         st.plotly_chart(fig)
+
+    # PIE CHART
 
     elif chart == "Pie Chart":
 
@@ -244,6 +255,8 @@ elif page == "Statistics":
 
         st.plotly_chart(fig)
 
+    # LINE CHART
+
     elif chart == "Line Chart":
 
         fig = px.line(
@@ -253,6 +266,8 @@ elif page == "Statistics":
         )
 
         st.plotly_chart(fig)
+
+    # HISTOGRAM
 
     elif chart == "Histogram":
 
@@ -264,19 +279,21 @@ elif page == "Statistics":
 
         st.plotly_chart(fig)
 
-# ---------------- ABOUT PAGE ----------------
+# =========================================================
+# ABOUT PAGE
+# =========================================================
 
 elif page == "About":
 
     st.title("ℹ️ About This Project")
 
     st.markdown("""
-    # Parkinson Disease Prediction System
+    ## Parkinson Disease Prediction System
 
     This project was developed by **Dharshana**
-    using **Python**, **Machine Learning**, and **Streamlit**.
+    using Python, Machine Learning, and Streamlit.
 
-    ## Technologies Used
+    ### Technologies Used
 
     - Python
     - Streamlit
@@ -285,23 +302,19 @@ elif page == "About":
     - Scikit-Learn
     - Plotly
 
-    ## Machine Learning Model
-
-    The model predicts Parkinson Disease using
-    medical voice measurement parameters.
-
-    ## Features
+    ### Features
 
     - Disease Prediction
     - Statistical Analysis
-    - Data Visualization
-    - Interactive Dashboard
+    - Interactive Graphs
+    - Machine Learning Model
 
-    ## Disclaimer
+    ### Disclaimer
 
     This application is developed for educational purposes only.
 
-    Please consult a doctor for actual medical diagnosis.
+    Please consult a medical professional for actual diagnosis.
     """)
 
     st.info("Machine Learning Project using Python and Streamlit")
+```
